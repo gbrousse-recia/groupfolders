@@ -58,7 +58,6 @@ class CacheUpdateListener implements IEventListener {
 		if (!($event instanceof CacheEntryUpdatedEvent)) {
 			return;
 		}
-		//récupération de l'id du group folder
 		$regExp = '/^__groupfolders\/(?<gfId>\d*)$/';
 		$path = $event->getPath();
 		preg_match($regExp,$path,$matches);
@@ -66,7 +65,6 @@ class CacheUpdateListener implements IEventListener {
 			return;
 		}
 		$id = $matches['gfId'];
-		// Récupération des infos sur le répertoire
 		$fileInfo = $this->view->getFileInfo($path);
 		$fileId = $fileInfo->getId();
 		$storage = $fileInfo->getStorage();
@@ -75,14 +73,12 @@ class CacheUpdateListener implements IEventListener {
 		$etag = $fileCache->getEtag();
 		$mtime = $fileCache->getMTime();
 		$storage_mtime = $fileCache->getStorageMTime();
-		//récupération du group folder
 		$groupFolder = $this->folderManager->getFolder((int)$id,(int)$storage->getId());
 		$mountPoint = $groupFolder['mount_point'];
 		$parentMountPoint = dirname($mountPoint);
 		if($parentMountPoint === '.'){
 			return;
 		}
-		//récupération du groupFolder parent
 		if(!$parentGroupFolderId = $this->folderManager->getFolderByMountPoint($parentMountPoint)){
 			return;
 		}
