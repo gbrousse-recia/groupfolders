@@ -73,6 +73,8 @@ class CacheUpdateListener implements IEventListener {
 		$cache = $storage->getCache();
 		$fileCache = $cache->get($fileId);
 		$etag = $fileCache->getEtag();
+		$mtime = $fileCache->getMTime();
+		$storage_mtime = $fileCache->getStorageMTime();
 		//récupération du group folder
 		$groupFolder = $this->folderManager->getFolder((int)$id,(int)$storage->getId());
 		$mountPoint = $groupFolder['mount_point'];
@@ -87,13 +89,19 @@ class CacheUpdateListener implements IEventListener {
 		$parentFileCachePath = '__groupfolders/'.$parentGroupFolderId;
 		$parentFileInfo = $this->view->getFileInfo($parentFileCachePath);
 		$parentFileId = $parentFileInfo->getId();
-		$cache->update($parentFileId,['etag'=>$etag]);
+		$cache->update($parentFileId,[
+			'etag'=>$etag,
+			'mtime'=>$mtime,
+			'storage_mtime'=>$storage_mtime,
+		]);
 
 
 		$this->logger->log('CacheUpdateListener::GroupFolder modified',[
 			'path'=>$path,
 			'id'=>$id,
 			'Etag'=>$etag,
+			'mtime'=>$mtime,
+			'smtime'=>$storage_mtime,
 			'mountPoint'=>$mountPoint,
 			'parentMountPoint'=>$parentMountPoint,
 			'parentGroupFolderId'=>$parentGroupFolderId,
