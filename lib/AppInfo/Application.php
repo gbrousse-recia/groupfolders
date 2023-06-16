@@ -23,6 +23,8 @@ namespace OCA\GroupFolders\AppInfo;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
+use OCP\Files\Cache\CacheEntryUpdatedEvent;
+use OCA\GroupFolders\Listeners\CacheUpdateListener;
 use OCA\Files_Trashbin\Expiration;
 use OCA\GroupFolders\ACL\ACLManagerFactory;
 use OCA\GroupFolders\ACL\RuleManager;
@@ -74,6 +76,7 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadAdditionalScriptsListener::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, LoadAdditionalScriptsListener::class);
+		$context->registerEventListener(CacheEntryUpdatedEvent::class, CacheUpdateListener::class);
 
 		$context->registerServiceAlias('GroupAppFolder', LazyFolder::class);
 

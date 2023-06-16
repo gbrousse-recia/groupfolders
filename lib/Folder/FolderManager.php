@@ -318,6 +318,23 @@ class FolderManager {
 	}
 
 	/**
+	 * Return just id for the folder mount point.
+	 *
+	 * @return int|bool
+	 */
+	public function getFolderByMountPoint(string $mountPoint): int {
+		$query = $this->connection->getQueryBuilder();
+		$query->select('folder_id')
+			->from('group_folders', 'f')
+			->where($query->expr()->eq('mount_point', $query->createNamedParameter($mountPoint, IQueryBuilder::PARAM_STR)));
+
+		$result = $query->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+		return $row ? $row['folder_id']:false;
+	}
+
+	/**
 	 * @return int[][]
 	 *
 	 * @psalm-return array<int, array<array-key, int>>
